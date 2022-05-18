@@ -1,0 +1,3 @@
+# Statuspage
+
+A customizable statuspage.
