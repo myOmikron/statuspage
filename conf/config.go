@@ -18,9 +18,7 @@ type Server struct {
 	ListenAddress           string
 	AllowedHosts            []AllowedHost
 	UseForwardedProtoHeader bool
-	TemplatePath            string
 	StaticPath              string
-	PluginPath              string
 }
 
 type Config struct {
