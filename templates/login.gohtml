@@ -1,0 +1,24 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/static/css/protected.css" rel="stylesheet" type="text/css">
+    <link href="/static/img/favicon.png" rel="shortcut icon">
+    <title>Title</title>
+</head>
+<body>
+    <div class="loginBox">
+        <form class="login" method="POST" action="/frontend/login">
+            <img src="/static/img/status.svg" alt="status icon">
+            <label for="username">Username</label>
+            <input class="input" id="username" name="username" required>
+            <label for="password">Password</label>
+            <input class="input" id="password" name="password" type="password" required>
+            <button class="button">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+{{end}}
