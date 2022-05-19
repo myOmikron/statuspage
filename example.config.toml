@@ -1,0 +1,14 @@
+[Database]
+Driver = "sqlite"
+Host = ""
+Name = "status.sqlite3"
+Password = ""
+Port = 3306
+User = "statuspage"
+
+[Server]
+ListenAddress = ""
+PluginPath = ""
+StaticPath = ""
+TemplatePath = ""
+UseForwardedProtoHeader = false
