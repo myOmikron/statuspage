@@ -1,0 +1,11 @@
+:root {
+    --level-0: #2e2b42;
+    --text: #eeeeee;
+}
+
+body {
+    margin: 0;
+    background-color: var(--level-0);
+    color: var(--text);
+    font-family: BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue", sans-serif;
+}
