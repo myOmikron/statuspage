@@ -6,10 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/static/css/status.css" rel="stylesheet" type="text/css">
     <link href="/static/img/favicon.png" rel="shortcut icon">
-    <title>Title</title>
+    <title>{{.Title}}</title>
 </head>
 <body>
+<div class="centered">
+    <h1 class="heading">{{.PageTitle}}</h1>
+    <div class="overallState {{.OverallState}}">
+    {{if eq .OverallState "ok"}}
+        <img class="invert" src="/static/img/ok.svg" alt="ok icon">
+    {{else if eq .OverallState "warning"}}
+        <img class="invert" src="/static/img/warning.svg" alt="warning icon">
+    {{else if eq .OverallState "maintenance"}}
+        <img class="invert" src="/static/img/maintenance.svg" alt="maintenance icon">
+    {{else if eq .OverallState "critical"}}
+        <img class="invert" src="/static/img/critical.svg" alt="critical icon">
+    {{end}}
+        {{.OverallStateText}}
+    </div>
 
+    <table class="table">
+        <tr>
+    {{range $idx, $val := .SystemStates}}
+        <td>
+            <div class="system">
+                <div class="systemText">
+                    <h3 class="systemHeading">{{.Name}}</h3>
+                    <span class="systemDescription">{{.Description}}</span>
+                </div>
+                <div class="stateIcon {{.State}}">
+                    {{if eq .State "ok"}}
+                        <img src="/static/img/ok.svg" alt="ok icon">
+                    {{else if eq .State "warning"}}
+                        <img src="/static/img/warning.svg" alt="warning icon">
+                    {{else if eq .State "maintenance"}}
+                        <img src="/static/img/maintenance.svg" alt="maintenance icon">
+                    {{else if eq .State "critical"}}
+                        <img src="/static/img/critical.svg" alt="critical icon">
+                    {{end}}
+                </div>
+            </div>
+        </td>
+    {{if not (mod $idx 2)}}
+        </tr>
+        <tr>
+    {{end}}
+    {{end}}
+        </tr>
+    </table>
+</div>
 </body>
 </html>
 {{end}}

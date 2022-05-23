@@ -44,8 +44,14 @@ func Start(configPath string) {
 	e.HidePort = true
 
 	// Template rendering
+	t := template.New("")
+	t.Funcs(template.FuncMap{
+		"mod": func(i, j int) bool {
+			return i%j == 0
+		},
+	})
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("templates/*.gohtml")),
+		templates: template.Must(t.ParseGlob("templates/*.gohtml")),
 	}
 	e.Renderer = renderer
 
