@@ -1,6 +1,15 @@
 :root {
-    --level-0: #2e2b42;
+    --level-0: #1a1a1a;
+    --level-1: #2c2c2c;
+    --level-2: #3d3d3d;
+    --level-3: #545454;
+    --white-text: #eeeeee;
     --text: #eeeeee;
+    --text-dark: #aaaaaa;
+    --ok: #0f6623;
+    --critical: #a80000;
+    --warning: #582d5b;
+    --maintenance: #3c5a9f;
 }
 
 body {
@@ -8,4 +17,129 @@ body {
     background-color: var(--level-0);
     color: var(--text);
     font-family: BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue", sans-serif;
+}
+
+.centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+
+.overallState {
+    display: flex;
+    align-items: center;
+    max-width: calc(70rem - 2*1.25rem);
+    width: calc(75vw - 2*1.25rem);
+    margin: 1rem 0 3rem 0;
+    font-size: larger;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--level-1);
+    color: var(--white-text);
+}
+
+.overallState img {
+    height: 2rem;
+    margin-right: 1rem;
+}
+
+.heading {
+    margin: 3rem 0 2rem 0;
+}
+
+.ok {
+    background-color: var(--ok);
+}
+
+.critical {
+    background-color: var(--critical);
+}
+
+.warning {
+    background-color: var(--warning);
+}
+
+.maintenance {
+    background-color: var(--maintenance);
+}
+
+.table {
+    width: 75vw;
+    max-width: 70rem;
+    border: 1px solid var(--level-1);
+    border-collapse: collapse;
+    box-shadow: var(--level-1) 0 0 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.table tr td {
+    width: 50%;
+    border: 1px solid var(--level-1);
+}
+
+.system {
+    min-height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--level-0);
+    padding: 1.5rem;
+}
+
+.systemText {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+    min-height: 4rem;
+}
+
+.systemHeading {
+    font-weight: normal;
+    margin: 0;
+}
+
+.systemDescription {
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.stateIcon {
+    border-radius: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 1rem;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.stateIcon img {
+    width: 100%;
+    filter: invert(100%);
+}
+
+.invert {
+    filter: invert(100%);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --level-0: white;
+        --white-text: white;
+        --level-1: #dedede;
+        --level-2: #bebebe;
+        --level-3: #adadad;
+        --text: black;
+        --text-dark: #444444;
+        --ok: #00b21e;
+        --critical: #da0909;
+        --warning: #aa21b4;
+        --maintenance: #3863cc;
+    }
+
+    .table {
+        box-shadow: unset;
+    }
 }
