@@ -4,8 +4,8 @@ import (
 	"fmt"
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/myOmikron/echotools/database"
-	"github.com/myOmikron/echotools/utilitymodels"
 	"github.com/myOmikron/statuspage/conf"
+	"github.com/myOmikron/statuspage/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -43,8 +43,8 @@ func initializeDatabase(config *conf.Config) (db *gorm.DB) {
 
 	db = database.Initialize(
 		driver,
-		&utilitymodels.Session{},
-		&utilitymodels.User{},
+		
+		models.Settings{},
 	)
 
 	return

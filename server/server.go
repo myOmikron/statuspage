@@ -8,6 +8,7 @@ import (
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/execution"
 	mw "github.com/myOmikron/echotools/middleware"
+	"github.com/myOmikron/echotools/utilitymodels"
 	"github.com/myOmikron/statuspage/conf"
 	"github.com/pelletier/go-toml"
 	"html/template"
@@ -76,11 +77,15 @@ func Start(configPath string) {
 		CookiePath: "/",
 	}))
 
+	// Authentication backend selection
+	mw.RegisterAuthProvider(utilitymodels.GetLocalUser(db))
+	mw.RegisterAuthProvider(utilitymodels.GetLDAPUser(db))
+
 	// Define routes
 	defineRoutes(e, db, config)
 
-	fmt.Println("http://127.0.0.1:8080")
-	execution.SignalStart(e, "127.0.0.1:8080", &execution.Config{
+	color.Printf(color.GREEN, "Starting to listen on: http://%s\n", config.Server.ListenAddress)
+	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{
 		ReloadFunc: func() {
 			Start(configPath)
 		},
