@@ -43,9 +43,18 @@ func initializeDatabase(config *conf.Config) (db *gorm.DB) {
 
 	db = database.Initialize(
 		driver,
-		
+
 		models.Settings{},
 	)
+
+	var settingCount int64
+	db.Find(&models.Settings{}).Count(&settingCount)
+	if settingCount == 0 {
+		db.Create(&models.Settings{
+			TabTitle:  "demo page - statuspage",
+			PageTitle: "demo page",
+		})
+	}
 
 	return
 }
