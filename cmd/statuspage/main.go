@@ -8,19 +8,35 @@ import (
 )
 
 func main() {
-	parser := argparse.NewParser("statuspage", "", &argparse.ParserConfig{
+	parser := argparse.NewParser("statuspage", "", &argparse.ParserConfig{})
+
+	configPath := parser.String("", "config-path", &argparse.Option{
+		Inheritable: true,
+		Default:     "/etc/statuspage/config.toml",
+		Help:        "Specify an alternative config path. Defaults to: /etc/statuspage/config.toml",
+	})
+
+	startServer := parser.AddCommand("start-server", "Starts the server", &argparse.ParserConfig{
 		DisableDefaultShowHelp: true,
 	})
 
-	configPath := parser.String("", "config-path", &argparse.Option{
-		Default: "/etc/statuspage/config.toml",
-		Help:    "Specify an alternative config path. Defaults to: /etc/statuspage/config.toml",
-	})
+	createAdminUser := parser.AddCommand(
+		"create-admin-user",
+		"Creates an administration user",
+		&argparse.ParserConfig{
+			DisableDefaultShowHelp: true,
+		},
+	)
 
 	if err := parser.Parse(nil); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 
-	server.Start(*configPath)
+	switch {
+	case startServer.Invoked:
+		server.Start(*configPath)
+	case createAdminUser.Invoked:
+		server.CreateAdminUser(*configPath)
+	}
 }
