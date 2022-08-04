@@ -22,7 +22,7 @@ func (w *Wrapper) LoginHandler(c echo.Context) error {
 	if user, err := auth.AuthenticateLocalUser(w.DB, form.Username, form.Password); err != nil {
 		return c.Redirect(302, "/login")
 	} else {
-		if err := middleware.Login(w.DB, user, c); err != nil {
+		if err := middleware.Login(w.DB, user, c, true); err != nil {
 			return c.Redirect(302, "/login")
 		} else {
 			return c.Redirect(302, "/protected/")

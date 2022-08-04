@@ -24,7 +24,14 @@ func defineRoutes(
 		SettingsReloadFunc: settingsReloadFunc,
 	}
 
-	e.GET("/", status.Status(db))
+	statusWrapper := status.Wrapper{
+		Config:             config,
+		DB:                 db,
+		Settings:           settings,
+		SettingsReloadFunc: settingsReloadFunc,
+	}
+
+	e.GET("/", statusWrapper.Status)
 
 	e.GET("/login", protectedWrapper.Login)
 	e.POST("/frontend/login", protectedWrapper.LoginHandler)

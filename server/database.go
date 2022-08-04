@@ -47,6 +47,8 @@ func initializeDatabase(config *conf.Config) (db *gorm.DB) {
 		driver,
 
 		dbmodels.Settings{},
+		dbmodels.Object{},
+		dbmodels.State{},
 	)
 
 	var settingCount int64

@@ -2,57 +2,83 @@ package status
 
 import (
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 
 	"github.com/myOmikron/statuspage/models/dbmodels"
 )
 
-type SystemState struct {
+type state string
+
+const (
+	ok          state = "ok"
+	maintenance       = "maintenance"
+	warning           = "warning"
+	critical          = "critical"
+)
+
+type ObjectState struct {
 	Name        string
-	State       string
+	State       state
 	Description string
 }
 
-type State struct {
-	Title            string //
-	PageTitle        string //
-	OverallState     string //
-	OverallStateText string //
-	SystemStates     []SystemState
+type Data struct {
+	Title            string
+	PageTitle        string
+	OverallState     state
+	OverallStateText string
+	ObjectStates     []ObjectState
 }
 
-func Status(db *gorm.DB) func(ctx echo.Context) error {
-	return func(c echo.Context) error {
-		var settings dbmodels.Settings
-		db.Find(&settings)
+func (w *Wrapper) Status(c echo.Context) error {
+	var objects []dbmodels.Object
 
-		state := State{
-			Title:            settings.TabTitle,
-			PageTitle:        settings.PageTitle,
-			OverallState:     "critical",
-			OverallStateText: "Critical error. There is no more Gulasch.",
-			SystemStates:     make([]SystemState, 0),
-		}
-		state.SystemStates = append(state.SystemStates, SystemState{
-			Name:        "Waffeln",
-			State:       "ok",
-			Description: "Normal operation",
-		})
-		state.SystemStates = append(state.SystemStates, SystemState{
-			Name:        "Mail",
-			State:       "maintenance",
-			Description: "Planned maintenance due to bad sysadmins",
-		})
-		state.SystemStates = append(state.SystemStates, SystemState{
-			Name:        "Gulasch",
-			State:       "critical",
-			Description: "There is no more Gulasch.",
-		})
-		state.SystemStates = append(state.SystemStates, SystemState{
-			Name:        "Mate",
-			State:       "warning",
-			Description: "There is only a limited amount of Mate left",
-		})
-		return c.Render(200, "status", &state)
+	w.DB.Preload("StateHistory").Find(&objects, "disabled = ?", false)
+
+	data := Data{
+		Title:        w.Settings.TabTitle,
+		PageTitle:    w.Settings.PageTitle,
+		ObjectStates: make([]ObjectState, 0),
+		OverallState: ok,
 	}
+
+	for _, obj := range objects {
+		o := ObjectState{
+			Name: obj.Name,
+		}
+		if len(obj.StateHistory) != 0 {
+			o.State = state(obj.StateHistory[len(obj.StateHistory)-1].State)
+			o.Description = obj.StateHistory[len(obj.StateHistory)-1].Description
+
+			switch o.State {
+			case critical:
+				if data.OverallState == maintenance ||
+					data.OverallState == warning ||
+					data.OverallState == ok {
+					data.OverallState = critical
+				}
+			case warning:
+				if data.OverallState == ok || data.OverallState == maintenance {
+					data.OverallState = warning
+				}
+			case maintenance:
+				if data.OverallState == ok {
+					data.OverallState = maintenance
+				}
+			}
+		}
+		data.ObjectStates = append(data.ObjectStates, o)
+	}
+
+	switch data.OverallState {
+	case critical:
+		data.OverallStateText = "Critical error(s) occurred."
+	case warning:
+		data.OverallStateText = "Warning(s) found."
+	case maintenance:
+		data.OverallStateText = "At least one component is currently in maintenance."
+	case ok:
+		data.OverallStateText = "All components are up and running."
+	}
+
+	return c.Render(200, "status", &data)
 }
