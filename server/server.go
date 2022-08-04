@@ -3,19 +3,22 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/myOmikron/statuspage/models/dbmodels"
+	"html/template"
+	"io/fs"
+	"io/ioutil"
+	"os"
+	"time"
+
 	"github.com/labstack/echo/v4"
 	emw "github.com/labstack/echo/v4/middleware"
 	"github.com/myOmikron/echotools/color"
 	"github.com/myOmikron/echotools/execution"
 	mw "github.com/myOmikron/echotools/middleware"
 	"github.com/myOmikron/echotools/utilitymodels"
-	"github.com/myOmikron/statuspage/conf"
 	"github.com/pelletier/go-toml"
-	"html/template"
-	"io/fs"
-	"io/ioutil"
-	"os"
-	"time"
+
+	"github.com/myOmikron/statuspage/models/conf"
 )
 
 func Start(configPath string) {
@@ -39,6 +42,14 @@ func Start(configPath string) {
 	}
 
 	db := initializeDatabase(config)
+
+	settings := dbmodels.Settings{}
+	settingsReloadFunc := func() {
+		tmp := dbmodels.Settings{}
+		db.Find(&tmp)
+		settings = tmp
+	}
+	settingsReloadFunc()
 
 	e := echo.New()
 	e.HideBanner = true
@@ -82,7 +93,7 @@ func Start(configPath string) {
 	mw.RegisterAuthProvider(utilitymodels.GetLDAPUser(db))
 
 	// Define routes
-	defineRoutes(e, db, config)
+	defineRoutes(e, db, config, &settings, settingsReloadFunc)
 
 	color.Printf(color.GREEN, "Starting to listen on: http://%s\n", config.Server.ListenAddress)
 	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{

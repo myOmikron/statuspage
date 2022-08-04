@@ -4,23 +4,24 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/myOmikron/echotools/color"
-	"github.com/myOmikron/echotools/database"
-	"github.com/myOmikron/echotools/utilitymodels"
-	"github.com/myOmikron/statuspage/conf"
-	"github.com/pelletier/go-toml"
 	"golang.org/x/term"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"strings"
 	"syscall"
+
+	"github.com/myOmikron/echotools/color"
+	"github.com/myOmikron/echotools/database"
+	"github.com/myOmikron/echotools/utilitymodels"
+	"github.com/pelletier/go-toml"
+
+	"github.com/myOmikron/statuspage/models/conf"
 )
 
 func CreateAdminUser(configPath string) {
 	config := &conf.Config{}
 
-	if configBytes, err := ioutil.ReadFile(configPath); errors.Is(err, fs.ErrNotExist) {
+	if configBytes, err := os.ReadFile(configPath); errors.Is(err, fs.ErrNotExist) {
 		color.Printf(color.RED, "Config was not found at %s\n", configPath)
 		b, _ := toml.Marshal(config)
 		fmt.Print(string(b))

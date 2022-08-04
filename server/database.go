@@ -2,17 +2,19 @@ package server
 
 import (
 	"fmt"
+	"net"
+	"net/url"
+	"strconv"
+
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/myOmikron/echotools/database"
-	"github.com/myOmikron/statuspage/conf"
-	"github.com/myOmikron/statuspage/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"net"
-	"net/url"
-	"strconv"
+
+	"github.com/myOmikron/statuspage/models/conf"
+	"github.com/myOmikron/statuspage/models/dbmodels"
 )
 
 func initializeDatabase(config *conf.Config) (db *gorm.DB) {
@@ -44,13 +46,13 @@ func initializeDatabase(config *conf.Config) (db *gorm.DB) {
 	db = database.Initialize(
 		driver,
 
-		models.Settings{},
+		dbmodels.Settings{},
 	)
 
 	var settingCount int64
-	db.Find(&models.Settings{}).Count(&settingCount)
+	db.Find(&dbmodels.Settings{}).Count(&settingCount)
 	if settingCount == 0 {
-		db.Create(&models.Settings{
+		db.Create(&dbmodels.Settings{
 			TabTitle:  "demo page - statuspage",
 			PageTitle: "demo page",
 		})

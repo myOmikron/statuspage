@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/hellflame/argparse"
-	"github.com/myOmikron/statuspage/server"
 	"os"
+
+	"github.com/hellflame/argparse"
+
+	"github.com/myOmikron/statuspage/server"
 )
 
 func main() {

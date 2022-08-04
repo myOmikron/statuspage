@@ -1,13 +1,17 @@
 :root {
-    --level-0: #2e2b42;
-    --level-1: #393550;
-    --level-2: #3c3957;
-    --level-3: #413d5d;
-    --level-4: #4a4669;
+    --level-0: #1a1a1a;
+    --level-1: #2c2c2c;
+    --level-2: #3d3d3d;
+    --level-3: #545454;
+    --white-text: #eeeeee;
     --text: #eeeeee;
-    --prim-light: #cf87fc;
-    --prim: #b75def;
-
+    --text-dark: #aaaaaa;
+    --ok: #0f6623;
+    --critical: #710000;
+    --warning: #582d5b;
+    --maintenance: #3c5a9f;
+    --prim: #cbcbcb;
+    --prim-light: #e5e5e5;
 }
 
 body {
@@ -18,16 +22,19 @@ body {
 }
 
 .input {
-    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     color: var(--text);
     background-color: var(--level-0);
-    border: 1px solid var(--level-4);
+    border: 1px solid var(--level-3);
 }
 
 .button {
     cursor: pointer;
+    border-radius: 1rem;
     border: none;
-    padding: 0.25rem 1rem 0.25rem 1rem;
+    font-size: small;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: var(--prim);
     transition: all ease-in-out 200ms;
 }

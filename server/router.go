@@ -2,17 +2,32 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/myOmikron/statuspage/conf"
+	"github.com/myOmikron/statuspage/models/dbmodels"
+	"gorm.io/gorm"
+
 	"github.com/myOmikron/statuspage/handler/protected"
 	"github.com/myOmikron/statuspage/handler/status"
-	"gorm.io/gorm"
+	"github.com/myOmikron/statuspage/models/conf"
 )
 
-func defineRoutes(e *echo.Echo, db *gorm.DB, config *conf.Config) {
+func defineRoutes(
+	e *echo.Echo,
+	db *gorm.DB,
+	config *conf.Config,
+	settings *dbmodels.Settings,
+	settingsReloadFunc func(),
+) {
+	protectedWrapper := protected.Wrapper{
+		DB:                 db,
+		Config:             config,
+		Settings:           settings,
+		SettingsReloadFunc: settingsReloadFunc,
+	}
+
 	e.GET("/", status.Status(db))
 
-	e.GET("/login", protected.Login)
-	e.POST("/frontend/login", protected.LoginHandler(db))
+	e.GET("/login", protectedWrapper.Login)
+	e.POST("/frontend/login", protectedWrapper.LoginHandler)
 
 	e.Static("/static/", config.Server.StaticPath)
 }
